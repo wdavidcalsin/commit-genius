@@ -1,3 +1,8 @@
 {
-  "extends": "next/core-web-vitals"
+  "plugins": ["@yonycalsin/import-sort"],
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "@yonycalsin/import-sort/typescript-react-imports": "error",
+    "@yonycalsin/import-sort/typescript-react-exports": "error"
+  }
 }

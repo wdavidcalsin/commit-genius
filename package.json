@@ -23,9 +23,13 @@
     "openai": "^3.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+    "react-hook-form": "^7.43.5",
+    "react-icons": "^4.8.0",
+    "typescript": "4.9.5",
+    "valtio": "^1.10.3"
   },
   "devDependencies": {
+    "@yonycalsin/eslint-plugin-import-sort": "^5.3.0",
     "husky": "^8.0.0"
   }
 }
