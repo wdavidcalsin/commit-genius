@@ -1,5 +1,6 @@
 import { requestOpenai } from "@/request";
 import { IServiceMessageCommit } from "@/types";
+import { removeUnnecessaryWord } from "@/utils";
 
 export const servicesCommit = async ({
   infinitiveVerbCommit,
@@ -12,5 +13,5 @@ export const servicesCommit = async ({
     descriptionCommit,
   });
 
-  return messageCommit;
+  return removeUnnecessaryWord(messageCommit);
 };

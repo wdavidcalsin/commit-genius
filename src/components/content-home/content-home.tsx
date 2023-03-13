@@ -3,6 +3,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import { useSnapshot } from "valtio";
 
 import { EntryForm } from "../entry-form";
+import { OutputMessage } from "../output-message";
 
 import { storeMessageEntryCommit } from "@/store";
 
@@ -14,7 +15,7 @@ const ContentHome = () => {
       <Box>
         <Heading textAlign={"center"}>Commit Genius</Heading>
         <EntryForm />
-        <Text>{snap.outputMessageCommit}</Text>
+        <OutputMessage />
       </Box>
     </Box>
   );

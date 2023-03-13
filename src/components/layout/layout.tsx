@@ -15,7 +15,7 @@ const Layout: React.FC<IPropsLayout> = ({ children }) => {
     <Box width={"100%"} minHeight={"100vh"} bgColor={bgPrimary}>
       <Container maxW="container.sm">
         <Navbar />
-        <Box>{children}</Box>
+        <Box paddingTop={"3rem"}>{children}</Box>
       </Container>
     </Box>
   );
