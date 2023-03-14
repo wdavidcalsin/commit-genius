@@ -3,6 +3,7 @@ import { proxy } from "valtio";
 import { API_URL } from "@/config";
 import { servicesCommit } from "@/services";
 import { IServiceMessageCommit, IStateCommit } from "@/types";
+import { removeUnnecessaryWord } from "@/utils";
 
 export const storeMessageEntryCommit = proxy<IStateCommit>({
   entryMessageCommit: {
@@ -47,6 +48,7 @@ export const setMessageEntryCommit = async (
       return;
     }
     message += JSON.parse(data);
-    storeMessageEntryCommit.outputMessageCommit = message;
+    storeMessageEntryCommit.outputMessageCommit =
+      removeUnnecessaryWord(message);
   };
 };

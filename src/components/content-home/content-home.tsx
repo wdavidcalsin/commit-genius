@@ -5,7 +5,7 @@ import { EntryForm } from "../entry-form";
 import { OutputMessage } from "../output-message";
 
 import { storeMessageEntryCommit } from "@/store";
-import { Blob } from "@/sub-components";
+import { Blob, CustomPopover, ExampleCommit } from "@/sub-components";
 
 const ContentHome = () => {
   const snap = useSnapshot(storeMessageEntryCommit);
@@ -17,7 +17,7 @@ const ContentHome = () => {
           <Heading
             textAlign={"center"}
             fontWeight="extrabold"
-            fontSize={"5rem"}
+            fontSize={["2.5rem", "3.5rem", "5rem"]}
             display={"flex"}
             justifyContent="center"
             gap={"1rem"}
@@ -41,9 +41,20 @@ const ContentHome = () => {
             </Box>
           </Heading>
           <Text fontSize={"1.1rem"} textAlign="center" color={"#9D9FA2"}>
-            This is a commit generator that allows you to create commit messages
-            for your Git projects.
+            A commit generator based on the Linux repository commits, for
+            effective Git project commit messages with good practices.
           </Text>
+          <Box
+            display={"flex"}
+            justifyContent="center"
+            gap={"1rem"}
+            alignItems="center"
+          >
+            Example
+            <CustomPopover>
+              <ExampleCommit />
+            </CustomPopover>
+          </Box>
         </Stack>
         <EntryForm />
         <OutputMessage />
