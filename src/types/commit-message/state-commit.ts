@@ -7,4 +7,5 @@ export interface IServiceMessageCommit {
 export interface IStateCommit {
   entryMessageCommit: IServiceMessageCommit;
   outputMessageCommit?: string;
+  streaming: boolean;
 }

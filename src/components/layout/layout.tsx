@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Container } from "@chakra-ui/react";
 
+import { Footer } from "../footer";
 import { Navbar } from "../navbar";
 
 import { useColors } from "@/constants";
@@ -14,8 +15,9 @@ const Layout: React.FC<IPropsLayout> = ({ children }) => {
   return (
     <Box width={"100%"} minHeight={"100vh"} bgColor={bgPrimary}>
       <Container maxW="container.sm">
-        <Navbar />
-        <Box paddingTop={"3rem"}>{children}</Box>
+        {/* <Navbar /> */}
+        <Box paddingTop={"5rem"}>{children}</Box>
+        <Footer />
       </Container>
     </Box>
   );

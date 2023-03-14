@@ -11,10 +11,11 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { IoMdSend } from "react-icons/io";
 import { useSnapshot } from "valtio";
 
 import { setMessageEntryCommit, storeMessageEntryCommit } from "@/store";
-import { SelectInfinitiveVerb } from "@/sub-components";
+import { Loading, SelectInfinitiveVerb } from "@/sub-components";
 
 type Inputs = {
   infinitiveVerbCommit: string;
@@ -29,6 +30,7 @@ const EntryForm = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
+  const snap = useSnapshot(storeMessageEntryCommit);
 
   const onSubmit: SubmitHandler<Inputs> = ({
     descriptionCommit,
@@ -64,6 +66,9 @@ const EntryForm = () => {
                 <Td>
                   <SelectInfinitiveVerb
                     {...register("infinitiveVerbCommit", { required: true })}
+                    borderWidth="1px"
+                    borderColor={"rgba(256,256,256, .5)"}
+                    focusBorderColor="#9D9FA2"
                   />
                 </Td>
               </Tr>
@@ -75,9 +80,14 @@ const EntryForm = () => {
                 </Td>
                 <Td>
                   <Input
-                    variant="filled"
+                    variant="outline"
                     placeholder="Object"
                     {...register("objectCommit", { required: true })}
+                    size="lg"
+                    height={"3.5rem"}
+                    borderWidth="1px"
+                    borderColor={"rgba(256,256,256, .5)"}
+                    focusBorderColor="#9D9FA2"
                   />
                 </Td>
               </Tr>
@@ -89,9 +99,14 @@ const EntryForm = () => {
                 </Td>
                 <Td>
                   <Input
-                    variant="filled"
+                    variant="outline"
                     placeholder="Description"
                     {...register("descriptionCommit", { required: true })}
+                    size="lg"
+                    height={"3.5rem"}
+                    borderWidth="1px"
+                    borderColor={"rgba(256,256,256, .5)"}
+                    focusBorderColor="#9D9FA2"
                   />
                 </Td>
               </Tr>
@@ -99,7 +114,12 @@ const EntryForm = () => {
           </Table>
         </TableContainer>
         <Box display={"grid"} placeItems="center">
-          <Button type="submit" variant="outline">
+          <Button
+            fontSize={"1.1rem"}
+            type="submit"
+            variant="outline"
+            rightIcon={snap.streaming ? <Loading /> : <IoMdSend />}
+          >
             Generate Commit
           </Button>
         </Box>

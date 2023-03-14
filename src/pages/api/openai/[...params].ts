@@ -1,13 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Configuration, OpenAIApi } from "openai";
+
+import { API_URL_OPENAI } from "@/config";
 
 const { OPENAI_API_KEY } = process.env;
-
-const configuration = new Configuration({
-  apiKey: OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") return res.status(405).end();
@@ -20,26 +15,71 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const promptToSend: string = `Genera commit en ingles con buenas practicas [Verbo Infinitivo] + [Objeto/área de trabajo] + [Descripción del cambio]:  \n\n${commitVerbInfinitive} ${commitObject} ${commitDescription}\n\n`;
 
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: promptToSend,
-    temperature: 0.39,
-    max_tokens: 640,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+  const response = await fetch(API_URL_OPENAI, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "text-davinci-003",
+      prompt: promptToSend,
+      stream: true,
+      temperature: 0.39,
+    }),
   });
 
-  if (!completion) return res.status(400).end();
+  if (!response.ok) {
+    console.error(response.statusText);
+    return res.status(500).json({ error: "Something went wrong Response" });
+  }
 
-  const textCommit = completion.data.choices[0].text;
+  res.writeHead(200, {
+    "Access-Control-Allow-Origin": "*",
+    Connection: "keep-alive",
+    "Cache-Control": "no-cache, no-transform",
+    "Content-Encoding": "none",
+    "Content-Type": "text/event-stream; charset=utf-8",
+  });
 
-  if (!textCommit) return res.status(400).errored;
+  const reader = response.body?.getReader();
 
-  const endIndex = textCommit.indexOf("\n");
-  const output = textCommit.substring(endIndex + 1);
+  if (!reader) {
+    console.log(reader);
+    return res.status(500).json({ error: "Something went wrong in Reader" });
+  }
 
-  res.status(200).json(output);
+  let chunk = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+
+    if (done) break;
+
+    chunk += new TextDecoder().decode(value);
+
+    const output = chunk
+      .split("\n")
+      .filter(Boolean)
+      .map((line) => line.replace("data: ", "").trim());
+
+    for (const data of output) {
+      if (data === "[DONE]") {
+        return res.end("data: [DONE]\n\n");
+      }
+      try {
+        const outputJson = JSON.parse(data);
+        const { text } = outputJson?.choices[0];
+        console.log(text);
+
+        res.write(`data: ${JSON.stringify(text)}\n\n`);
+
+        chunk = "";
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 }
 
 export default handler;

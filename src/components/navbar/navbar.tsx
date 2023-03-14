@@ -33,6 +33,7 @@ const Navbar = () => {
         _hover={{
           transform: "scale(1.2)",
         }}
+        zIndex="20"
       >
         <BiSun />
       </Box>
