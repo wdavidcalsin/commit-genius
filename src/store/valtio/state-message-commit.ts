@@ -1,7 +1,7 @@
 import { proxy } from "valtio";
 
 import { API_URL } from "@/config";
-import { servicesCommit } from "@/services";
+import { serviceEventSourceCommit } from "@/services";
 import { IServiceMessageCommit, IStateCommit } from "@/types";
 import { removeUnnecessaryWord } from "@/utils";
 
@@ -25,11 +25,12 @@ export const setMessageEntryCommit = async (
   const { infinitiveVerbCommit, objectCommit, descriptionCommit } =
     storeMessageEntryCommit.entryMessageCommit;
 
-  const url = `${API_URL}/${infinitiveVerbCommit}/${objectCommit}/${descriptionCommit}`;
-  console.log(url);
-  const eventSource = new EventSource(url);
+  const eventSource = serviceEventSourceCommit({
+    infinitiveVerbCommit,
+    objectCommit,
+    descriptionCommit,
+  });
   let message = "";
-  // console.log(eventSource);
 
   eventSource.onerror = (error) => {
     console.error("Event source Onerror:", error);
@@ -38,7 +39,6 @@ export const setMessageEntryCommit = async (
   };
 
   eventSource.onmessage = (event) => {
-    // console.error("Event source event:", event);
     const { data } = event;
     console.log(data);
     if (data === "[DONE]") {

@@ -1,17 +1,13 @@
-import { requestOpenai } from "@/request";
+import { API_URL } from "@/config";
 import { IServiceMessageCommit } from "@/types";
-import { removeUnnecessaryWord } from "@/utils";
 
-export const servicesCommit = async ({
+export const serviceEventSourceCommit = ({
   infinitiveVerbCommit,
   objectCommit,
   descriptionCommit,
 }: IServiceMessageCommit) => {
-  const messageCommit = await requestOpenai({
-    infinitiveVerbCommit,
-    objectCommit,
-    descriptionCommit,
-  });
+  const url = `${API_URL}/${infinitiveVerbCommit}/${objectCommit}/${descriptionCommit}`;
 
-  return removeUnnecessaryWord(messageCommit);
+  const eventSource = new EventSource(url);
+  return eventSource;
 };
