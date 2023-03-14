@@ -47,7 +47,7 @@ To install the project locally, follow these steps:
   ```
   or
   ```sh
-  npm run dev dev
+  npm run dev
   ```
 - Open your browser and navigate to http://localhost:3000/ to view the application.
 
