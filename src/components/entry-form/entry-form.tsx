@@ -1,23 +1,21 @@
+import * as React from "react";
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   FormLabel,
   Input,
   Stack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Tr,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoMdSend } from "react-icons/io";
 import { useSnapshot } from "valtio";
 
-import { infinitiveVerb } from "@/constants";
-import { setMessageEntryCommit, storeMessageEntryCommit } from "@/store";
+import {
+  setMessageEntryCommit,
+  storeMessageEntryCommit,
+  storeVerbInfinitive,
+} from "@/store";
 import { CustomPopover, Loading, SelectInfinitiveVerb } from "@/sub-components";
 
 type Inputs = {
@@ -33,7 +31,8 @@ const EntryForm = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const snap = useSnapshot(storeMessageEntryCommit);
+  const snapCommit = useSnapshot(storeMessageEntryCommit);
+  const { infinitiveVerbs, streamingVerbs } = useSnapshot(storeVerbInfinitive);
 
   const onSubmit: SubmitHandler<Inputs> = ({
     descriptionCommit,
@@ -68,18 +67,22 @@ const EntryForm = () => {
             >
               Infinitive Verb
               <CustomPopover>
-                {infinitiveVerb.map(({ label, description }, index) => (
-                  <Box
-                    key={index}
-                    fontSize=".7rem"
-                    whiteSpace={"normal"}
-                    fontWeight="normal"
-                    lineHeight={"1rem"}
-                  >
-                    <span style={{ fontWeight: "bold" }}>{label}</span>:{" "}
-                    {description}
-                  </Box>
-                ))}
+                {streamingVerbs ? (
+                  <Loading />
+                ) : (
+                  infinitiveVerbs.map(({ name, description }, index) => (
+                    <Box
+                      key={index}
+                      fontSize=".7rem"
+                      whiteSpace={"normal"}
+                      fontWeight="normal"
+                      lineHeight={"1rem"}
+                    >
+                      <span style={{ fontWeight: "bold" }}>{name}</span>:{" "}
+                      {description}
+                    </Box>
+                  ))
+                )}
               </CustomPopover>
             </FormLabel>
             <SelectInfinitiveVerb
@@ -146,7 +149,7 @@ const EntryForm = () => {
               fontSize={"1.1rem"}
               type="submit"
               variant="outline"
-              rightIcon={snap.streaming ? <Loading /> : <IoMdSend />}
+              rightIcon={snapCommit.streaming ? <Loading /> : <IoMdSend />}
             >
               Generate Commit
             </Button>

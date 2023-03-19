@@ -1,7 +1,10 @@
 import * as React from "react";
-import { Select, SelectField, SelectProps } from "@chakra-ui/react";
+import { Box, Select, SelectProps } from "@chakra-ui/react";
+import { useSnapshot } from "valtio";
 
-import { infinitiveVerb } from "@/constants";
+import { Loading } from "../loading";
+
+import { setInfinitiveVerbs, storeVerbInfinitive } from "@/store";
 
 interface IPropsSelect extends SelectProps {
   name: string;
@@ -9,6 +12,13 @@ interface IPropsSelect extends SelectProps {
 
 const SelectInfinitiveVerb = React.forwardRef<HTMLSelectElement, IPropsSelect>(
   function SelectInfinitiveVerb({ name, ...props }, ref) {
+    const { infinitiveVerbs, streamingVerbs } =
+      useSnapshot(storeVerbInfinitive);
+
+    React.useEffect(() => {
+      void setInfinitiveVerbs();
+    }, []);
+
     return (
       <Select
         placeholder="Select option"
@@ -23,11 +33,19 @@ const SelectInfinitiveVerb = React.forwardRef<HTMLSelectElement, IPropsSelect>(
         size="lg"
         height={"3.5rem"}
       >
-        {infinitiveVerb.map((verb, index) => (
-          <option key={index} value={verb.value}>
-            {verb.label}
+        {streamingVerbs ? (
+          <option>
+            <Box display={"grid"} placeItems="center" width={"100%"}>
+              <Loading />
+            </Box>
           </option>
-        ))}
+        ) : (
+          infinitiveVerbs.map((verb, index) => (
+            <option key={index} value={verb.value}>
+              {verb.name}
+            </option>
+          ))
+        )}
       </Select>
     );
   }
