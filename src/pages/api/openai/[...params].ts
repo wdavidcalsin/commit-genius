@@ -13,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const commitObject = params[1] ? params[1] : "";
   const commitDescription = params[2] ? params[2] : "";
 
-  const promptToSend: string = `Generate commit in English using good practices [Infinitive Verb] + [Object/Work area] + [Description of the change]:  \n\n${commitVerbInfinitive} ${commitObject} ${commitDescription}\n\n`;
+  const promptToSend: string = `Generate commit in English using good practices [Infinitive Verb] + [Object/Work area] + [Description of the change]:  \n\n${commitVerbInfinitive} ${commitObject} in ${commitDescription}\n\n`;
 
   const response = await fetch(API_URL_OPENAI, {
     method: "POST",
